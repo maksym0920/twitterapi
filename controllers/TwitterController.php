@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\TwitterUsers;
+use app\models\TwitterUsersForm;
 use yii;
 
 class TwitterController extends BaseController
@@ -25,12 +26,29 @@ class TwitterController extends BaseController
         // id
         // user
         // secret
-        $id = yii::$app->request->get('id');
-        $user = yii::$app->request->get('user');
-        $secret = yii::$app->request->get('secret');
+        $answer = [
+            'error' => 'internal error',
+        ];
+
+        $data = [
+            'id' => Yii::$app->request->get('id'),
+            'user' => Yii::$app->request->get('user'),
+            'secret' => Yii::$app->request->get('secret'),
+        ];
 
 
-        return ['action' => 'add'];
+        $model = new TwitterUsersForm();
+
+        if ($model->load(['TwitterUsersForm' => $data]) && $model->validate()) {
+            $model->save(false);
+            $answer = [];
+        } else {
+            if($model->hasErrors()){
+                $answer['error'] = reset($model->firstErrors);
+            }
+        }
+
+        return $answer;
     }
 
     public function actionRemove()
@@ -66,7 +84,7 @@ class TwitterController extends BaseController
         foreach ($users as $user) {
             $answer['users'][] = [
                 'name' => $user['user'],
-                'date' => date('Y-m-d',$user['created_at']),
+                'date' => date('Y-m-d', $user['created_at']),
             ];
         }
 
