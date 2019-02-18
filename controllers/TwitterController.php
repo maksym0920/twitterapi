@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
-use app\models\TwitterUsers;
 use app\models\TwitterUsersForm;
 use yii;
 
 class TwitterController extends BaseController
 {
-    private $userlimit = 50;
+    private $userLimit = 50;
 
     public function actions()
     {
@@ -76,7 +75,6 @@ class TwitterController extends BaseController
 
     public function actionFeed()
     {
-        //GET: {endpoint}/feed?id=...&secret=..
         $answer = [
             'error' => 'internal error',
         ];
@@ -89,12 +87,15 @@ class TwitterController extends BaseController
         $model = new TwitterUsersForm(['scenario' => TwitterUsersForm::SCENARIO_FEED]);
         if ($model->load(['TwitterUsersForm' => $data]) && $model->validate()) {
             $users = TwitterUsersForm::find()->asArray()->all();
+            $answer = [
+                'feed' => []
+            ];
 
             foreach ($users as $user) {
-
+                var_dump($user);
             }
-            var_dump($users);
 
+            exit('end');
         } else {
             if ($model->hasErrors()) {
                 $answer['error'] = reset($model->firstErrors);
@@ -113,8 +114,8 @@ class TwitterController extends BaseController
         $countQuery = clone $users;
         $pages = new yii\data\Pagination([
             'totalCount' => $countQuery->count(),
-            'pageSize' => $this->userlimit,
-            'defaultPageSize' => $this->userlimit,
+            'pageSize' => $this->userLimit,
+            'defaultPageSize' => $this->userLimit,
         ]);
 
         $users = $users->offset($pages->offset)
@@ -131,5 +132,4 @@ class TwitterController extends BaseController
 
         return $answer;
     }
-
 }
