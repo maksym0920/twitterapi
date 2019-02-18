@@ -51,13 +51,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '' => 'site/index',
+                '' => 'twitter/index',
 
-                'add' => 'site/index',
-                'remove' => 'site/index',
-                'feed' => 'site/index',
+                'GET add' => 'twitter/add',
+                'GET remove' => 'twitter/remove',
+                'GET feed' => 'twitter/feed',
+                'GET user-list' => 'twitter/user-list',
 
-                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
 
