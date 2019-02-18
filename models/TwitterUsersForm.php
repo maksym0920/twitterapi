@@ -7,6 +7,9 @@ use yii\db\ActiveRecord;
 
 class TwitterUsersForm extends \yii\db\ActiveRecord
 {
+    const SCENARIO_ADD = 'add';
+    const SCENARIO_REMOVE = 'remove';
+
     public $id;
     public $secret;
 
@@ -25,10 +28,10 @@ class TwitterUsersForm extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'user', 'secret'], 'required', 'message' => 'missing parameter'], //{attribute}
-
             [['id'], 'string', 'length' => [32, 32], 'message' => 'access denied'],
             [['user'], 'string', 'max' => 50, 'message' => 'invalid user'], //можно добавить проверку в твитерре
-            [['user'], 'unique', 'message' => 'user already exists'],
+            [['user'], 'unique', 'message' => 'user already exists', 'on' => self::SCENARIO_ADD],
+            [['user'], 'exist', 'message' => 'user not exist', 'on' => self::SCENARIO_REMOVE],
             ['secret', 'secretValidate'],
         ];
     }
@@ -37,7 +40,6 @@ class TwitterUsersForm extends \yii\db\ActiveRecord
     {
         if (!$this->hasErrors()) {
             $curSecret = sha1($this->id . $this->user);
-
             if ($this->secret !== $curSecret) {
                 $this->addError($attribute, 'access denied');
             }

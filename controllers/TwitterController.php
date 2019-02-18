@@ -12,7 +12,7 @@ class TwitterController extends BaseController
 
     public function actions()
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
     public function actionIndex()
@@ -22,10 +22,6 @@ class TwitterController extends BaseController
 
     public function actionAdd()
     {
-        ///add?id=...&user=..&secret=..
-        // id
-        // user
-        // secret
         $answer = [
             'error' => 'internal error',
         ];
@@ -36,14 +32,13 @@ class TwitterController extends BaseController
             'secret' => Yii::$app->request->get('secret'),
         ];
 
-
-        $model = new TwitterUsersForm();
+        $model = new TwitterUsersForm(['scenario' => TwitterUsersForm::SCENARIO_ADD]);
 
         if ($model->load(['TwitterUsersForm' => $data]) && $model->validate()) {
             $model->save(false);
             $answer = [];
         } else {
-            if($model->hasErrors()){
+            if ($model->hasErrors()) {
                 $answer['error'] = reset($model->firstErrors);
             }
         }
@@ -53,8 +48,30 @@ class TwitterController extends BaseController
 
     public function actionRemove()
     {
-        //GET: {endpoint}/remove?id=...&user=..&secret=..
-        return ['action' => 'remove'];
+        $answer = [
+            'error' => 'internal error',
+        ];
+
+        $data = [
+            'id' => Yii::$app->request->get('id'),
+            'user' => Yii::$app->request->get('user'),
+            'secret' => Yii::$app->request->get('secret'),
+        ];
+
+        $model = new TwitterUsersForm(['scenario' => TwitterUsersForm::SCENARIO_REMOVE]);
+        if ($model->load(['TwitterUsersForm' => $data]) && $model->validate()) {
+            $user = TwitterUsersForm::find()->where(['user' => $data['user']])->one();
+            if ($user) {
+                $user->delete();
+                $answer = [];
+            }
+        } else {
+            if ($model->hasErrors()) {
+                $answer['error'] = reset($model->firstErrors);
+            }
+        }
+
+        return $answer;
     }
 
     public function actionFeed()
