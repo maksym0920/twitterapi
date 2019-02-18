@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%twitter_users}}".
@@ -27,7 +28,7 @@ class TwitterUsers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user', 'created_at'], 'required'],
+            [['user'], 'required'],
             [['created_at'], 'integer'],
             [['user'], 'string', 'max' => 50],
             [['user'], 'unique'],
@@ -43,6 +44,18 @@ class TwitterUsers extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user' => 'User',
             'created_at' => 'Created At',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+            ],
         ];
     }
 }
