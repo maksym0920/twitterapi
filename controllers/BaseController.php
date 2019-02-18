@@ -3,14 +3,12 @@
 namespace app\controllers;
 
 
-/**
- * Site controller
- */
 class BaseController extends \yii\web\Controller
 {
     public function actionError()
     {
-        return ['status'=>'404'];
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return ['error' => 'internal error'];
     }
 
 }
