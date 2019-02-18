@@ -17,7 +17,7 @@ $config = [
             'cookieValidationKey' => 'FfgiYWctFrDjYoIgzLSeG1fasirtMNEO',
             
             'baseUrl' => '',
-            'enableCookieValidation' => false,
+            'enableCookieValidation' => true,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
