@@ -77,14 +77,38 @@ class TwitterController extends BaseController
     public function actionFeed()
     {
         //GET: {endpoint}/feed?id=...&secret=..
-        return ['action' => 'feed'];
+        $answer = [
+            'error' => 'internal error',
+        ];
+
+        $data = [
+            'id' => Yii::$app->request->get('id'),
+            'secret' => Yii::$app->request->get('secret'),
+        ];
+
+        $model = new TwitterUsersForm(['scenario' => TwitterUsersForm::SCENARIO_FEED]);
+        if ($model->load(['TwitterUsersForm' => $data]) && $model->validate()) {
+            $users = TwitterUsersForm::find()->asArray()->all();
+
+            foreach ($users as $user) {
+
+            }
+            var_dump($users);
+
+        } else {
+            if ($model->hasErrors()) {
+                $answer['error'] = reset($model->firstErrors);
+            }
+        }
+
+        return $answer;
     }
 
     public function actionUserList()
     {
         $answer = [];
 
-        $users = TwitterUsers::find();
+        $users = TwitterUsersForm::find();
 
         $countQuery = clone $users;
         $pages = new yii\data\Pagination([

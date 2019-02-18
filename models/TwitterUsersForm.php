@@ -9,6 +9,7 @@ class TwitterUsersForm extends \yii\db\ActiveRecord
 {
     const SCENARIO_ADD = 'add';
     const SCENARIO_REMOVE = 'remove';
+    const SCENARIO_FEED = 'feed';
 
     public $id;
     public $secret;
@@ -27,12 +28,20 @@ class TwitterUsersForm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'user', 'secret'], 'required', 'message' => 'missing parameter'], //{attribute}
+            [['id', 'secret'], 'required', 'message' => 'missing parameter'],
+            ['user', 'required', 'message' => 'missing parameter', 'on' => [self::SCENARIO_ADD, self::SCENARIO_REMOVE]],
             [['id'], 'string', 'length' => [32, 32], 'message' => 'access denied'],
-            [['user'], 'string', 'max' => 50, 'message' => 'invalid user'], //можно добавить проверку в твитерре
+            [
+                ['user'],
+                'string',
+                'max' => 50,
+                'message' => 'invalid user',
+                'on' => [self::SCENARIO_ADD, self::SCENARIO_REMOVE]
+            ], //можно добавить проверку в твитерре
+            ['secret', 'secretValidate'],
             [['user'], 'unique', 'message' => 'user already exists', 'on' => self::SCENARIO_ADD],
             [['user'], 'exist', 'message' => 'user not exist', 'on' => self::SCENARIO_REMOVE],
-            ['secret', 'secretValidate'],
+            ['user', 'default', 'value' => '', 'on' => self::SCENARIO_FEED],
         ];
     }
 
