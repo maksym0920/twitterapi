@@ -266,7 +266,6 @@ class TwitterController extends BaseController
                             'tweet' => $item['text'],
                             'hashtag' => $item['entities']['hashtags'],
                         ];
-
                     }
                 }
             } catch (\Exception $e) {
@@ -283,7 +282,7 @@ class TwitterController extends BaseController
 
         return $answer;
     }
-
+/*
     public function actionUserList()
     {
         $answer = [];
@@ -311,4 +310,5 @@ class TwitterController extends BaseController
 
         return $answer;
     }
+*/
 }

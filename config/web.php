@@ -56,8 +56,7 @@ $config = [
                 'GET add' => 'twitter/add',
                 'GET remove' => 'twitter/remove',
                 'GET feed' => 'twitter/feed',
-                'GET user-list' => 'twitter/user-list',
-
+                //'GET user-list' => 'twitter/user-list',
             ],
         ],
 
